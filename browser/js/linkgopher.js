@@ -41,16 +41,16 @@ function handler(links, pattern, onlyDomains) {
 
   // To filter links like: javascript:void(0)
   const resLinks = links.filter(link => link.lastIndexOf('://', 10) > 0);
-  // Remove duplicate, sorting of links.
-  const items = [...(new Set(resLinks))].sort();
+  // Remove duplicate, but do not sort links.
+  const items = [...(new Set(resLinks))];
   const re = pattern ? new RegExp(pattern, 'g') : null;
   const added = items.filter(link => addNodes(link, containerLinks, re, onlyDomains));
 
   if (!added.length) {
     return message.dataset.content = chrome.i18n.getMessage('noMatches');
   }
-  // Extract base URL from link, remove duplicate, sorting of domains.
-  const domains = [...(new Set(added.map(link => getBaseURL(link))))].sort();
+  // Extract base URL from link, remove duplicate, but do not sort domains.
+  const domains = [...(new Set(added.map(link => getBaseURL(link))))];
   const reDomains = filteringDomains ? re : null;
   domains.forEach(domain => addNodes(domain, containerDomains, reDomains), onlyDomains);
 };
